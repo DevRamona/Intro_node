@@ -1,26 +1,39 @@
 import fs from 'fs';
-// Blocking synchronous
-// const textIn = fs.readFileSync('./txt/input.txt', 'utf-8')
-// console.log(textIn)
+import http from "http"
+const server = http.createServer((req, resp) => {
+    console.log(req.url, req.method)
+    resp.setHeader("Content-Type", "text/html")
 
-
-// const textOut = `What is your passion: ${textIn}\n Created on ${Date.now()}`;
-// fs.writeFileSync("./txt/output.txt", textOut)
-// console.log(textOut)
-
-// Asynchronous
-
-fs.readFile("./txt/new.txt","utf-8", (error, data1) => {
-console.log(data1)
-fs.readFile("./txt/${data1}.txt", "utf-8", (err, data2) => {
-    console.log(data2)
-    fs.readFile("./txt/append.txt", "utf-8", (err, data3) => {
-        console.log(data3)
-
-        fs.writeFile("./txt/final.txt", `${data2} ${data3}`, "utf-8", err => {
-            console.log("Your file has been written ")
-        })
+    let path = "./views/"
+    switch(req.url) {
+        case '/':
+            path += "index.html"
+            break;
+            case "/about":
+            path += "about.html"
+            break;
+            case "/service":
+            path += "service.html"
+            break;
+            case "/about-us":
+                resp.statusCode = 301
+                resp.setHeader('location', "/about")
+                resp.end()
+            default :
+            path += "404.html"
+            break
+    }
+    fs.readFile(path, (err, data) => {
+        if(err) {
+            console.log(err)
+            resp.end()
+        } else {
+            resp.end(data)
+            
+        }
     })
 })
+
+server.listen(3000, 'localhost', () => {
+    console.log("Listening to port 3000")
 }) 
-console.log("Read this file")
