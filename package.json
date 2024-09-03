@@ -8,5 +8,9 @@
   "author": "",
   "type": "module",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.19.2",
+    "lodash": "^4.17.21"
+  }
 }
