@@ -1,19 +1,18 @@
-import express from "express"
-const app = express()
+import http from 'http';
+import fs from "fs"
+import _ from 'lodash';
 
+const server = http.createServer()
 
-app .listen(3000) 
-app.get("/", (req,res) => {
-    res.sendFile(<p>Home page</p>)
+server.on("request", (request, response) => {
+    const readable = fs.createReadStream("input.txt")
+    readable.on("data", chunk => {
+        response.write(chunk)
+    })
+    readable.on("end" , () => {
+        response.end()
+    } )
 })
-app.get("/about", (req,res) => {
-    res.sendFile("./views/about/html", {root: __dirname})
-})
-
-app.get("/about-us", (req,res) => {
-    res.redirect("/about")
-})
-
-app.use((req,res) => {
-    res.status(404).sendFile("./views/404.html", {root: __dirname})
-})
+server.listen(3000, () => {
+    console.log("Server is listening on port 3000");
+});
